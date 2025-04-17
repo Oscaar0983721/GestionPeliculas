@@ -20,7 +20,7 @@ namespace GestionPeliculas.Views
             _contenidoController = new ContenidoController();
             _peliculas = _contenidoController.ObtenerTodasPeliculas();
             _series = _contenidoController.ObtenerTodasSeries();
-            
+
             InitializeComponent();
         }
 
@@ -97,7 +97,7 @@ namespace GestionPeliculas.Views
             btnBuscar.Click += (sender, e) =>
             {
                 string textoBusqueda = txtBuscar.Text.Trim().ToLower();
-                
+
                 if (_tipoContenidoActual == "Pelicula")
                 {
                     if (string.IsNullOrEmpty(textoBusqueda))
@@ -106,7 +106,7 @@ namespace GestionPeliculas.Views
                     }
                     else
                     {
-                        _peliculas = _contenidoController.ObtenerTodasPeliculas().FindAll(p => 
+                        _peliculas = _contenidoController.ObtenerTodasPeliculas().FindAll(p =>
                             p.Titulo.ToLower().Contains(textoBusqueda));
                     }
                 }
@@ -118,11 +118,11 @@ namespace GestionPeliculas.Views
                     }
                     else
                     {
-                        _series = _contenidoController.ObtenerTodasSeries().FindAll(s => 
+                        _series = _contenidoController.ObtenerTodasSeries().FindAll(s =>
                             s.Titulo.ToLower().Contains(textoBusqueda));
                     }
                 }
-                
+
                 MostrarContenido();
             };
             panelFiltros.Controls.Add(btnBuscar);
@@ -135,7 +135,7 @@ namespace GestionPeliculas.Views
             btnLimpiar.Click += (sender, e) =>
             {
                 txtBuscar.Text = "";
-                
+
                 if (_tipoContenidoActual == "Pelicula")
                 {
                     _peliculas = _contenidoController.ObtenerTodasPeliculas();
@@ -144,7 +144,7 @@ namespace GestionPeliculas.Views
                 {
                     _series = _contenidoController.ObtenerTodasSeries();
                 }
-                
+
                 MostrarContenido();
             };
             panelFiltros.Controls.Add(btnLimpiar);
@@ -184,7 +184,7 @@ namespace GestionPeliculas.Views
             lvContenido.Location = new Point(10, 10);
             lvContenido.Size = new Size(940, 430);
             lvContenido.Tag = "lvContenido"; // Para identificarlo al actualizar
-            
+
             // Columnas para películas
             lvContenido.Columns.Add("ID", 50);
             lvContenido.Columns.Add("Título", 200);
@@ -193,19 +193,19 @@ namespace GestionPeliculas.Views
             lvContenido.Columns.Add("Plataforma", 150);
             lvContenido.Columns.Add("Calificación", 100);
             lvContenido.Columns.Add("Duración/Temporadas", 150);
-            
+
             panelContenido.Controls.Add(lvContenido);
 
             // Menú contextual para editar/eliminar contenido
             ContextMenuStrip menuContextual = new ContextMenuStrip();
-            
+
             ToolStripMenuItem menuEditar = new ToolStripMenuItem("Editar contenido");
             menuEditar.Click += (sender, e) =>
             {
                 if (lvContenido.SelectedItems.Count > 0)
                 {
                     int id = int.Parse(lvContenido.SelectedItems[0].SubItems[0].Text);
-                    
+
                     if (_tipoContenidoActual == "Pelicula")
                     {
                         var pelicula = _contenidoController.ObtenerPeliculaPorId(id);
@@ -225,7 +225,7 @@ namespace GestionPeliculas.Views
                 }
             };
             menuContextual.Items.Add(menuEditar);
-            
+
             ToolStripMenuItem menuEliminar = new ToolStripMenuItem("Eliminar contenido");
             menuEliminar.Click += (sender, e) =>
             {
@@ -236,7 +236,7 @@ namespace GestionPeliculas.Views
                 }
             };
             menuContextual.Items.Add(menuEliminar);
-            
+
             lvContenido.ContextMenuStrip = menuContextual;
 
             // Mostrar contenido
@@ -290,7 +290,7 @@ namespace GestionPeliculas.Views
                     item.SubItems.Add(pelicula.CalificacionPromedio.ToString("F1"));
                     item.SubItems.Add($"{pelicula.Duracion} min");
                     item.Tag = pelicula;
-                    
+
                     lvContenido.Items.Add(item);
                 }
             }
@@ -306,7 +306,7 @@ namespace GestionPeliculas.Views
                     item.SubItems.Add(serie.CalificacionPromedio.ToString("F1"));
                     item.SubItems.Add($"{serie.NumeroTemporadas} temporadas");
                     item.Tag = serie;
-                    
+
                     lvContenido.Items.Add(item);
                 }
             }
@@ -315,7 +315,7 @@ namespace GestionPeliculas.Views
         private void AgregarEditarPelicula(Pelicula pelicula)
         {
             bool esEdicion = pelicula != null;
-            
+
             // Crear formulario
             Form formPelicula = new Form();
             formPelicula.Text = esEdicion ? "Editar Película" : "Agregar Película";
@@ -429,10 +429,10 @@ namespace GestionPeliculas.Views
             btnGuardar.Text = "Guardar";
             btnGuardar.Location = new Point(150, 370);
             btnGuardar.Size = new Size(100, 30);
-            btnGuardar.Click += (sender, e) =>
+            btnGuardar.Click += (sender, args) =>
             {
                 // Validar datos
-                if (string.IsNullOrEmpty(txtTitulo.Text) || string.IsNullOrEmpty(txtDescripcion.Text) || 
+                if (string.IsNullOrEmpty(txtTitulo.Text) || string.IsNullOrEmpty(txtDescripcion.Text) ||
                     string.IsNullOrEmpty(txtGeneros.Text) || string.IsNullOrEmpty(txtDirector.Text))
                 {
                     MessageBox.Show("Por favor, complete todos los campos obligatorios.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -466,7 +466,7 @@ namespace GestionPeliculas.Views
                 {
                     MessageBox.Show("Película guardada correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     formPelicula.Close();
-                    
+
                     // Actualizar lista de películas
                     _peliculas = _contenidoController.ObtenerTodasPeliculas();
                     MostrarContenido();
@@ -482,7 +482,7 @@ namespace GestionPeliculas.Views
             btnCancelar.Text = "Cancelar";
             btnCancelar.Location = new Point(260, 370);
             btnCancelar.Size = new Size(90, 30);
-            btnCancelar.Click += (sender, e) => formPelicula.Close();
+            btnCancelar.Click += (sender, args) => formPelicula.Close();
             formPelicula.Controls.Add(btnCancelar);
 
             formPelicula.ShowDialog();
@@ -491,7 +491,7 @@ namespace GestionPeliculas.Views
         private void AgregarEditarSerie(Serie serie)
         {
             bool esEdicion = serie != null;
-            
+
             // Crear formulario
             Form formSerie = new Form();
             formSerie.Text = esEdicion ? "Editar Serie" : "Agregar Serie";
@@ -600,10 +600,10 @@ namespace GestionPeliculas.Views
             btnGuardar.Text = "Guardar";
             btnGuardar.Location = new Point(150, 350);
             btnGuardar.Size = new Size(100, 30);
-            btnGuardar.Click += (sender, e) =>
+            btnGuardar.Click += (sender, args) =>
             {
                 // Validar datos
-                if (string.IsNullOrEmpty(txtTitulo.Text) || string.IsNullOrEmpty(txtDescripcion.Text) || 
+                if (string.IsNullOrEmpty(txtTitulo.Text) || string.IsNullOrEmpty(txtDescripcion.Text) ||
                     string.IsNullOrEmpty(txtGeneros.Text))
                 {
                     MessageBox.Show("Por favor, complete todos los campos obligatorios.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -617,7 +617,7 @@ namespace GestionPeliculas.Views
                 nuevaSerie.Año = (int)numAño.Value;
                 nuevaSerie.Generos = new List<string>(txtGeneros.Text.Split(',').Select(g => g.Trim()));
                 nuevaSerie.Plataforma = cmbPlataforma.Text;
-                
+
                 int numTemporadasAnterior = esEdicion ? serie.NumeroTemporadas : 0;
                 int numTemporadasNuevo = (int)numTemporadas.Value;
 
@@ -678,7 +678,7 @@ namespace GestionPeliculas.Views
                 {
                     MessageBox.Show("Serie guardada correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     formSerie.Close();
-                    
+
                     // Actualizar lista de series
                     _series = _contenidoController.ObtenerTodasSeries();
                     MostrarContenido();
@@ -694,7 +694,7 @@ namespace GestionPeliculas.Views
             btnCancelar.Text = "Cancelar";
             btnCancelar.Location = new Point(260, 350);
             btnCancelar.Size = new Size(90, 30);
-            btnCancelar.Click += (sender, e) => formSerie.Close();
+            btnCancelar.Click += (sender, args) => formSerie.Close();
             formSerie.Controls.Add(btnCancelar);
 
             formSerie.ShowDialog();
@@ -704,7 +704,7 @@ namespace GestionPeliculas.Views
         {
             bool resultado = false;
             string tipo = "";
-            
+
             if (_tipoContenidoActual == "Pelicula")
             {
                 var pelicula = _contenidoController.ObtenerPeliculaPorId(id);
@@ -741,7 +741,7 @@ namespace GestionPeliculas.Views
             if (resultado)
             {
                 MessageBox.Show($"La {tipo} ha sido eliminada correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                
+
                 // Actualizar lista de contenido
                 if (_tipoContenidoActual == "Pelicula")
                 {
@@ -751,7 +751,7 @@ namespace GestionPeliculas.Views
                 {
                     _series = _contenidoController.ObtenerTodasSeries();
                 }
-                
+
                 MostrarContenido();
             }
             else
