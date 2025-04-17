@@ -9,13 +9,13 @@ namespace GestionPeliculas.Models
         public int ContenidoId { get; set; }
         public string TipoContenido { get; set; } // "Pelicula" o "Serie"
         public int? EpisodioId { get; set; } // Null si es película
-        public DateTime FechaVisualizacion { get; set; }
+        public DateTime Fecha { get; set; } // Añadido el campo Fecha
         public bool Completado { get; set; }
         public int ProgresoMinutos { get; set; }
 
         public HistorialVisualizacion()
         {
-            FechaVisualizacion = DateTime.Now;
+            Fecha = DateTime.Now;
         }
     }
 }
