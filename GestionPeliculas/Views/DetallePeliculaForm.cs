@@ -12,6 +12,7 @@ namespace GestionPeliculas.Views
         private readonly Usuario _usuarioActual;
         private readonly HistorialController _historialController;
         private readonly UsuarioController _usuarioController;
+        private readonly ComentarioController _comentarioController;
 
         public DetallePeliculaForm(Pelicula pelicula, Usuario usuario)
         {
@@ -19,7 +20,8 @@ namespace GestionPeliculas.Views
             _usuarioActual = usuario;
             _historialController = new HistorialController();
             _usuarioController = new UsuarioController();
-            
+            _comentarioController = new ComentarioController();
+
             InitializeComponent();
         }
 
@@ -29,7 +31,7 @@ namespace GestionPeliculas.Views
             // 
             // DetallePeliculaForm
             // 
-            this.ClientSize = new System.Drawing.Size(800, 500);
+            this.ClientSize = new System.Drawing.Size(800, 550);
             this.Name = "DetallePeliculaForm";
             this.Text = $"Detalle de Película - {_pelicula.Titulo}";
             this.Load += new System.EventHandler(this.DetallePeliculaForm_Load);
@@ -157,7 +159,7 @@ namespace GestionPeliculas.Views
                     Completado = true,
                     ProgresoMinutos = _pelicula.Duracion
                 };
-                
+
                 _historialController.RegistrarVisualizacion(historial);
                 MessageBox.Show("Película marcada como vista.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
             };
@@ -188,25 +190,50 @@ namespace GestionPeliculas.Views
             btnCalificar.Click += (sender, e) =>
             {
                 int calificacion = (int)cmbCalificacion.SelectedItem;
-                
+
                 // Registrar calificación
                 _usuarioController.CalificarContenido(_usuarioActual.Id, _pelicula.Id, calificacion);
-                
+
                 // Actualizar calificación promedio
                 var contenidoController = new ContenidoController();
                 contenidoController.ActualizarCalificacionPromedio(_pelicula.Id, calificacion, "Pelicula");
-                
+
                 MessageBox.Show("Calificación enviada correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
             };
             panelAcciones.Controls.Add(btnCalificar);
 
+            // Botón de comentarios
+            Button btnComentarios = new Button();
+            btnComentarios.Text = "Ver comentarios";
+            btnComentarios.Location = new Point(10, 90);
+            btnComentarios.Size = new Size(150, 30);
+            btnComentarios.Click += (sender, e) =>
+            {
+                Form comentariosForm = new ComentariosForm(_pelicula.Id, "Pelicula", _usuarioActual, _pelicula.Titulo);
+                comentariosForm.ShowDialog();
+            };
+            panelAcciones.Controls.Add(btnComentarios);
+
             // Botón de cerrar
             Button btnCerrar = new Button();
             btnCerrar.Text = "Cerrar";
-            btnCerrar.Location = new Point(650, 100);
+            btnCerrar.Location = new Point(650, 90);
             btnCerrar.Size = new Size(100, 30);
             btnCerrar.Click += (sender, e) => this.Close();
             panelAcciones.Controls.Add(btnCerrar);
+
+            // Botón para agregar a la lista de reportes
+            Button btnReportes = new Button();
+            btnReportes.Text = "Generar Reportes";
+            btnReportes.Location = new Point(310, 90);
+            btnReportes.Size = new Size(150, 30);
+            btnReportes.Visible = _usuarioActual.Rol == "Administrador"; // Solo visible para administradores
+            btnReportes.Click += (sender, e) =>
+            {
+                Form reportesForm = new ReportesForm();
+                reportesForm.ShowDialog();
+            };
+            panelAcciones.Controls.Add(btnReportes);
         }
 
         private void DetallePeliculaForm_Load(object sender, EventArgs e)
