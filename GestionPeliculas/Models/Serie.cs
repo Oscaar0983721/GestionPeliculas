@@ -5,7 +5,9 @@ namespace GestionPeliculas.Models
     public class Serie : Contenido
     {
         public int NumeroTemporadas { get; set; }
+        public int NumeroEpisodios { get; set; } // Añadida esta propiedad
         public int NumeroEpisodiosTotales { get; set; }
+        public string Creador { get; set; } // Añadida esta propiedad
         public List<Temporada> Temporadas { get; set; } = new List<Temporada>();
     }
 
