@@ -15,22 +15,28 @@ namespace GestionPeliculas.Controllers
             _dataService = new JsonDataService();
         }
 
+        // Constructor para inyección de dependencias (para testing)
+        public ContenidoController(JsonDataService dataService)
+        {
+            _dataService = dataService;
+        }
+
         #region Películas
-        public List<Pelicula> ObtenerTodasPeliculas()
+        public virtual List<Pelicula> ObtenerTodasPeliculas()
         {
             return _dataService.CargarDatos<List<Pelicula>>("Peliculas.json") ?? new List<Pelicula>();
         }
 
-        public Pelicula ObtenerPeliculaPorId(int id)
+        public virtual Pelicula ObtenerPeliculaPorId(int id)
         {
             var peliculas = ObtenerTodasPeliculas();
             return peliculas.FirstOrDefault(p => p.Id == id);
         }
 
-        public bool AgregarPelicula(Pelicula pelicula)
+        public virtual bool AgregarPelicula(Pelicula pelicula)
         {
             var peliculas = ObtenerTodasPeliculas();
-            
+
             // Asignar ID
             if (peliculas.Count > 0)
             {
@@ -45,11 +51,11 @@ namespace GestionPeliculas.Controllers
             return _dataService.GuardarDatos("Peliculas.json", peliculas);
         }
 
-        public bool ActualizarPelicula(Pelicula pelicula)
+        public virtual bool ActualizarPelicula(Pelicula pelicula)
         {
             var peliculas = ObtenerTodasPeliculas();
             var index = peliculas.FindIndex(p => p.Id == pelicula.Id);
-            
+
             if (index == -1)
             {
                 return false;
@@ -59,11 +65,11 @@ namespace GestionPeliculas.Controllers
             return _dataService.GuardarDatos("Peliculas.json", peliculas);
         }
 
-        public bool EliminarPelicula(int id)
+        public virtual bool EliminarPelicula(int id)
         {
             var peliculas = ObtenerTodasPeliculas();
             var pelicula = peliculas.FirstOrDefault(p => p.Id == id);
-            
+
             if (pelicula == null)
             {
                 return false;
@@ -75,21 +81,21 @@ namespace GestionPeliculas.Controllers
         #endregion
 
         #region Series
-        public List<Serie> ObtenerTodasSeries()
+        public virtual List<Serie> ObtenerTodasSeries()
         {
             return _dataService.CargarDatos<List<Serie>>("Series.json") ?? new List<Serie>();
         }
 
-        public Serie ObtenerSeriePorId(int id)
+        public virtual Serie ObtenerSeriePorId(int id)
         {
             var series = ObtenerTodasSeries();
             return series.FirstOrDefault(s => s.Id == id);
         }
 
-        public bool AgregarSerie(Serie serie)
+        public virtual bool AgregarSerie(Serie serie)
         {
             var series = ObtenerTodasSeries();
-            
+
             // Asignar ID
             if (series.Count > 0)
             {
@@ -114,11 +120,11 @@ namespace GestionPeliculas.Controllers
             return _dataService.GuardarDatos("Series.json", series);
         }
 
-        public bool ActualizarSerie(Serie serie)
+        public virtual bool ActualizarSerie(Serie serie)
         {
             var series = ObtenerTodasSeries();
             var index = series.FindIndex(s => s.Id == serie.Id);
-            
+
             if (index == -1)
             {
                 return false;
@@ -128,11 +134,11 @@ namespace GestionPeliculas.Controllers
             return _dataService.GuardarDatos("Series.json", series);
         }
 
-        public bool EliminarSerie(int id)
+        public virtual bool EliminarSerie(int id)
         {
             var series = ObtenerTodasSeries();
             var serie = series.FirstOrDefault(s => s.Id == id);
-            
+
             if (serie == null)
             {
                 return false;
@@ -144,63 +150,63 @@ namespace GestionPeliculas.Controllers
         #endregion
 
         #region Filtros
-        public List<Contenido> BuscarContenidoPorNombre(string nombre)
+        public virtual List<Contenido> BuscarContenidoPorNombre(string nombre)
         {
             var resultado = new List<Contenido>();
-            
+
             var peliculas = ObtenerTodasPeliculas()
                 .Where(p => p.Titulo.ToLower().Contains(nombre.ToLower()))
                 .Cast<Contenido>();
-            
+
             var series = ObtenerTodasSeries()
                 .Where(s => s.Titulo.ToLower().Contains(nombre.ToLower()))
                 .Cast<Contenido>();
-            
+
             resultado.AddRange(peliculas);
             resultado.AddRange(series);
-            
+
             return resultado;
         }
 
-        public List<Contenido> FiltrarContenidoPorGenero(string genero)
+        public virtual List<Contenido> FiltrarContenidoPorGenero(string genero)
         {
             var resultado = new List<Contenido>();
-            
+
             var peliculas = ObtenerTodasPeliculas()
                 .Where(p => p.Generos.Any(g => g.Equals(genero, StringComparison.OrdinalIgnoreCase)))
                 .Cast<Contenido>();
-            
+
             var series = ObtenerTodasSeries()
                 .Where(s => s.Generos.Any(g => g.Equals(genero, StringComparison.OrdinalIgnoreCase)))
                 .Cast<Contenido>();
-            
+
             resultado.AddRange(peliculas);
             resultado.AddRange(series);
-            
+
             return resultado;
         }
 
-        public List<Contenido> FiltrarContenidoPorPlataforma(string plataforma)
+        public virtual List<Contenido> FiltrarContenidoPorPlataforma(string plataforma)
         {
             var resultado = new List<Contenido>();
-            
+
             var peliculas = ObtenerTodasPeliculas()
                 .Where(p => p.Plataforma.Equals(plataforma, StringComparison.OrdinalIgnoreCase))
                 .Cast<Contenido>();
-            
+
             var series = ObtenerTodasSeries()
                 .Where(s => s.Plataforma.Equals(plataforma, StringComparison.OrdinalIgnoreCase))
                 .Cast<Contenido>();
-            
+
             resultado.AddRange(peliculas);
             resultado.AddRange(series);
-            
+
             return resultado;
         }
         #endregion
 
         #region Calificaciones
-        public void ActualizarCalificacionPromedio(int contenidoId, int calificacion, string tipoContenido)
+        public virtual void ActualizarCalificacionPromedio(int contenidoId, int calificacion, string tipoContenido)
         {
             if (tipoContenido == "Pelicula")
             {
@@ -227,6 +233,103 @@ namespace GestionPeliculas.Controllers
         }
         #endregion
 
+        #region Reportes
+        public virtual Dictionary<string, int> ObtenerGenerosMasPopulares(DateTime fechaInicio, DateTime fechaFin)
+        {
+            var historialController = new HistorialController();
+            var historial = historialController.ObtenerHistorialEntreFechas(fechaInicio, fechaFin);
+
+            Dictionary<string, int> conteoGeneros = new Dictionary<string, int>();
+
+            foreach (var registro in historial)
+            {
+                Contenido contenido = null;
+
+                if (registro.TipoContenido == "Pelicula")
+                {
+                    contenido = ObtenerPeliculaPorId(registro.ContenidoId);
+                }
+                else if (registro.TipoContenido == "Serie")
+                {
+                    contenido = ObtenerSeriePorId(registro.ContenidoId);
+                }
+
+                if (contenido != null)
+                {
+                    foreach (var genero in contenido.Generos)
+                    {
+                        if (conteoGeneros.ContainsKey(genero))
+                        {
+                            conteoGeneros[genero]++;
+                        }
+                        else
+                        {
+                            conteoGeneros[genero] = 1;
+                        }
+                    }
+                }
+            }
+
+            // Ordenar por popularidad (mayor a menor)
+            return conteoGeneros.OrderByDescending(x => x.Value)
+                               .ToDictionary(x => x.Key, x => x.Value);
+        }
+
+        public virtual List<Serie> ObtenerSeriesMasPopulares(DateTime fechaInicio, DateTime fechaFin, int limite = 10)
+        {
+            var historialController = new HistorialController();
+            var historial = historialController.ObtenerHistorialEntreFechas(fechaInicio, fechaFin)
+                                              .Where(h => h.TipoContenido == "Serie");
+
+            // Contar visualizaciones por serie
+            var conteoSeries = historial.GroupBy(h => h.ContenidoId)
+                                       .Select(g => new { SerieId = g.Key, Visualizaciones = g.Count() })
+                                       .OrderByDescending(x => x.Visualizaciones)
+                                       .Take(limite)
+                                       .ToList();
+
+            // Obtener detalles de las series
+            List<Serie> seriesPopulares = new List<Serie>();
+            foreach (var item in conteoSeries)
+            {
+                var serie = ObtenerSeriePorId(item.SerieId);
+                if (serie != null)
+                {
+                    seriesPopulares.Add(serie);
+                }
+            }
+
+            return seriesPopulares;
+        }
+
+        public virtual List<Pelicula> ObtenerPeliculasMasPopulares(DateTime fechaInicio, DateTime fechaFin, int limite = 10)
+        {
+            var historialController = new HistorialController();
+            var historial = historialController.ObtenerHistorialEntreFechas(fechaInicio, fechaFin)
+                                              .Where(h => h.TipoContenido == "Pelicula");
+
+            // Contar visualizaciones por película
+            var conteoPeliculas = historial.GroupBy(h => h.ContenidoId)
+                                          .Select(g => new { PeliculaId = g.Key, Visualizaciones = g.Count() })
+                                          .OrderByDescending(x => x.Visualizaciones)
+                                          .Take(limite)
+                                          .ToList();
+
+            // Obtener detalles de las películas
+            List<Pelicula> peliculasPopulares = new List<Pelicula>();
+            foreach (var item in conteoPeliculas)
+            {
+                var pelicula = ObtenerPeliculaPorId(item.PeliculaId);
+                if (pelicula != null)
+                {
+                    peliculasPopulares.Add(pelicula);
+                }
+            }
+
+            return peliculasPopulares;
+        }
+        #endregion
+
         public void InicializarDatosContenido()
         {
             InicializarPeliculas();
@@ -236,27 +339,27 @@ namespace GestionPeliculas.Controllers
         private void InicializarPeliculas()
         {
             var peliculas = ObtenerTodasPeliculas();
-            
+
             if (peliculas.Count == 0)
             {
                 // Lista de géneros para usar aleatoriamente
                 string[] generos = { "Acción", "Aventura", "Comedia", "Drama", "Ciencia Ficción", "Terror", "Romance", "Animación", "Documental", "Thriller" };
-                
+
                 // Lista de plataformas para usar aleatoriamente
                 string[] plataformas = { "Netflix", "Amazon Prime", "Disney+", "HBO Max", "Apple TV+", "Hulu", "Paramount+" };
-                
+
                 // Lista de directores para usar aleatoriamente
                 string[] directores = { "Christopher Nolan", "Steven Spielberg", "Martin Scorsese", "Quentin Tarantino", "James Cameron", "Guillermo del Toro", "Denis Villeneuve", "Greta Gerwig", "Ava DuVernay", "Taika Waititi" };
-                
+
                 // Crear 50 películas de prueba
                 Random random = new Random();
-                
+
                 for (int i = 1; i <= 50; i++)
                 {
                     // Seleccionar géneros aleatorios (entre 1 y 3)
                     List<string> generosSeleccionados = new List<string>();
                     int numGeneros = random.Next(1, 4);
-                    
+
                     for (int j = 0; j < numGeneros; j++)
                     {
                         string genero = generos[random.Next(generos.Length)];
@@ -265,7 +368,7 @@ namespace GestionPeliculas.Controllers
                             generosSeleccionados.Add(genero);
                         }
                     }
-                    
+
                     var pelicula = new Pelicula
                     {
                         Titulo = $"Película {i}",
@@ -279,7 +382,7 @@ namespace GestionPeliculas.Controllers
                         Duracion = random.Next(90, 180),
                         Director = directores[random.Next(directores.Length)]
                     };
-                    
+
                     AgregarPelicula(pelicula);
                 }
             }
@@ -288,24 +391,24 @@ namespace GestionPeliculas.Controllers
         private void InicializarSeries()
         {
             var series = ObtenerTodasSeries();
-            
+
             if (series.Count == 0)
             {
                 // Lista de géneros para usar aleatoriamente
                 string[] generos = { "Acción", "Aventura", "Comedia", "Drama", "Ciencia Ficción", "Terror", "Romance", "Animación", "Documental", "Thriller" };
-                
+
                 // Lista de plataformas para usar aleatoriamente
                 string[] plataformas = { "Netflix", "Amazon Prime", "Disney+", "HBO Max", "Apple TV+", "Hulu", "Paramount+" };
-                
+
                 // Crear 50 series de prueba
                 Random random = new Random();
-                
+
                 for (int i = 1; i <= 50; i++)
                 {
                     // Seleccionar géneros aleatorios (entre 1 y 3)
                     List<string> generosSeleccionados = new List<string>();
                     int numGeneros = random.Next(1, 4);
-                    
+
                     for (int j = 0; j < numGeneros; j++)
                     {
                         string genero = generos[random.Next(generos.Length)];
@@ -314,17 +417,17 @@ namespace GestionPeliculas.Controllers
                             generosSeleccionados.Add(genero);
                         }
                     }
-                    
+
                     // Crear temporadas y episodios
                     int numTemporadas = random.Next(1, 6);
                     List<Temporada> temporadas = new List<Temporada>();
                     int totalEpisodios = 0;
-                    
+
                     for (int t = 1; t <= numTemporadas; t++)
                     {
                         int numEpisodios = random.Next(8, 16);
                         List<Episodio> episodios = new List<Episodio>();
-                        
+
                         for (int e = 1; e <= numEpisodios; e++)
                         {
                             episodios.Add(new Episodio
@@ -334,17 +437,17 @@ namespace GestionPeliculas.Controllers
                                 Duracion = random.Next(30, 61),
                                 Descripcion = $"Descripción del episodio {e} de la temporada {t}."
                             });
-                            
+
                             totalEpisodios++;
                         }
-                        
+
                         temporadas.Add(new Temporada
                         {
                             NumeroTemporada = t,
                             Episodios = episodios
                         });
                     }
-                    
+
                     var serie = new Serie
                     {
                         Titulo = $"Serie {i}",
@@ -359,7 +462,7 @@ namespace GestionPeliculas.Controllers
                         NumeroEpisodiosTotales = totalEpisodios,
                         Temporadas = temporadas
                     };
-                    
+
                     AgregarSerie(serie);
                 }
             }
