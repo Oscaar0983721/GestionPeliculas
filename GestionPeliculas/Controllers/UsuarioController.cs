@@ -17,6 +17,12 @@ namespace GestionPeliculas.Controllers
             _dataService = new JsonDataService();
         }
 
+        // Constructor para inyección de dependencias (para testing)
+        public UsuarioController(JsonDataService dataService)
+        {
+            _dataService = dataService;
+        }
+
         public List<Usuario> ObtenerTodosUsuarios()
         {
             return _dataService.CargarDatos<List<Usuario>>("Usuarios.json") ?? new List<Usuario>();
@@ -37,7 +43,7 @@ namespace GestionPeliculas.Controllers
         public bool RegistrarUsuario(Usuario usuario)
         {
             var usuarios = ObtenerTodosUsuarios();
-            
+
             // Verificar si ya existe el nombre de usuario
             if (usuarios.Any(u => u.NombreUsuario.Equals(usuario.NombreUsuario, StringComparison.OrdinalIgnoreCase)))
             {
@@ -56,7 +62,7 @@ namespace GestionPeliculas.Controllers
 
             // Encriptar contraseña
             usuario.Contraseña = HashContraseña(usuario.Contraseña);
-            
+
             // Por defecto, asignar rol de usuario
             if (string.IsNullOrEmpty(usuario.Rol))
             {
@@ -71,7 +77,7 @@ namespace GestionPeliculas.Controllers
         {
             var usuarios = ObtenerTodosUsuarios();
             var index = usuarios.FindIndex(u => u.Id == usuario.Id);
-            
+
             if (index == -1)
             {
                 return false;
@@ -85,7 +91,7 @@ namespace GestionPeliculas.Controllers
         {
             var usuarios = ObtenerTodosUsuarios();
             var usuario = usuarios.FirstOrDefault(u => u.Id == id);
-            
+
             if (usuario == null)
             {
                 return false;
@@ -98,7 +104,7 @@ namespace GestionPeliculas.Controllers
         public bool AutenticarUsuario(string nombreUsuario, string contraseña)
         {
             var usuario = ObtenerUsuarioPorNombre(nombreUsuario);
-            
+
             if (usuario == null)
             {
                 return false;
@@ -110,7 +116,7 @@ namespace GestionPeliculas.Controllers
         public void AgregarContenidoVisto(int usuarioId, int contenidoId)
         {
             var usuario = ObtenerUsuarioPorId(usuarioId);
-            
+
             if (usuario != null && !usuario.ContenidoVisto.Contains(contenidoId))
             {
                 usuario.ContenidoVisto.Add(contenidoId);
@@ -121,7 +127,7 @@ namespace GestionPeliculas.Controllers
         public void CalificarContenido(int usuarioId, int contenidoId, int calificacion)
         {
             var usuario = ObtenerUsuarioPorId(usuarioId);
-            
+
             if (usuario != null)
             {
                 if (usuario.Calificaciones.ContainsKey(contenidoId))
@@ -132,7 +138,7 @@ namespace GestionPeliculas.Controllers
                 {
                     usuario.Calificaciones.Add(contenidoId, calificacion);
                 }
-                
+
                 ActualizarUsuario(usuario);
             }
         }
@@ -143,12 +149,12 @@ namespace GestionPeliculas.Controllers
             {
                 byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(contraseña));
                 StringBuilder builder = new StringBuilder();
-                
+
                 for (int i = 0; i < bytes.Length; i++)
                 {
                     builder.Append(bytes[i].ToString("x2"));
                 }
-                
+
                 return builder.ToString();
             }
         }
@@ -162,7 +168,7 @@ namespace GestionPeliculas.Controllers
         public void InicializarDatosUsuario()
         {
             var usuarios = ObtenerTodosUsuarios();
-            
+
             if (usuarios.Count == 0)
             {
                 // Crear administrador
@@ -173,9 +179,9 @@ namespace GestionPeliculas.Controllers
                     Email = "admin@sistema.com",
                     Rol = "Administrador"
                 };
-                
+
                 RegistrarUsuario(admin);
-                
+
                 // Crear 100 usuarios de prueba
                 for (int i = 1; i <= 100; i++)
                 {
@@ -186,7 +192,7 @@ namespace GestionPeliculas.Controllers
                         Email = $"usuario{i}@ejemplo.com",
                         Rol = "Usuario"
                     };
-                    
+
                     RegistrarUsuario(usuario);
                 }
             }
