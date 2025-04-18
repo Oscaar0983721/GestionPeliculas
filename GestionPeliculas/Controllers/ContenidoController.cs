@@ -6,6 +6,7 @@ using GestionPeliculas.Services;
 
 namespace GestionPeliculas.Controllers
 {
+    // Asegurarse de que los métodos necesarios sean virtuales
     public class ContenidoController
     {
         private readonly JsonDataService _dataService;
