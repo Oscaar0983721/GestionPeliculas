@@ -18,10 +18,10 @@ namespace GestionPeliculas.Services
             }
         }
 
-        public T CargarDatos<T>(string nombreArchivo) where T : class
+        public virtual T CargarDatos<T>(string nombreArchivo) where T : class
         {
             string rutaArchivo = Path.Combine(_dataDirectory, nombreArchivo);
-            
+
             if (!File.Exists(rutaArchivo))
             {
                 return null;
@@ -35,7 +35,7 @@ namespace GestionPeliculas.Services
                     PropertyNameCaseInsensitive = true,
                     WriteIndented = true
                 };
-                
+
                 return JsonSerializer.Deserialize<T>(jsonData, options);
             }
             catch (Exception ex)
@@ -45,10 +45,10 @@ namespace GestionPeliculas.Services
             }
         }
 
-        public bool GuardarDatos<T>(string nombreArchivo, T datos) where T : class
+        public virtual bool GuardarDatos<T>(string nombreArchivo, T datos) where T : class
         {
             string rutaArchivo = Path.Combine(_dataDirectory, nombreArchivo);
-            
+
             try
             {
                 var options = new JsonSerializerOptions
@@ -56,7 +56,7 @@ namespace GestionPeliculas.Services
                     PropertyNameCaseInsensitive = true,
                     WriteIndented = true
                 };
-                
+
                 string jsonData = JsonSerializer.Serialize(datos, options);
                 File.WriteAllText(rutaArchivo, jsonData);
                 return true;
