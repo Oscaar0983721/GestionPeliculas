@@ -23,26 +23,26 @@ namespace GestionPeliculas.Tests
             // Configurar datos de prueba
             _peliculasTest = new List<Pelicula>
             {
-                new Pelicula { 
-                    Id = 1, 
-                    Titulo = "Película 1", 
-                    Descripcion = "Descripción película 1", 
-                    Año = 2020, 
-                    Generos = new List<string> { "Acción", "Aventura" }, 
-                    Plataforma = "Netflix", 
-                    CalificacionPromedio = 4.5, 
+                new Pelicula {
+                    Id = 1,
+                    Titulo = "Película 1",
+                    Descripcion = "Descripción película 1",
+                    Año = 2020,
+                    Generos = new List<string> { "Acción", "Aventura" },
+                    Plataforma = "Netflix",
+                    CalificacionPromedio = 4.5,
                     NumeroCalificaciones = 100,
                     Duracion = 120,
                     Director = "Director 1"
                 },
-                new Pelicula { 
-                    Id = 2, 
-                    Titulo = "Película 2", 
-                    Descripcion = "Descripción película 2", 
-                    Año = 2021, 
-                    Generos = new List<string> { "Comedia", "Romance" }, 
-                    Plataforma = "Amazon Prime", 
-                    CalificacionPromedio = 3.8, 
+                new Pelicula {
+                    Id = 2,
+                    Titulo = "Película 2",
+                    Descripcion = "Descripción película 2",
+                    Año = 2021,
+                    Generos = new List<string> { "Comedia", "Romance" },
+                    Plataforma = "Amazon Prime",
+                    CalificacionPromedio = 3.8,
                     NumeroCalificaciones = 80,
                     Duracion = 105,
                     Director = "Director 2"
@@ -51,14 +51,14 @@ namespace GestionPeliculas.Tests
 
             _seriesTest = new List<Serie>
             {
-                new Serie { 
-                    Id = 1, 
-                    Titulo = "Serie 1", 
-                    Descripcion = "Descripción serie 1", 
-                    Año = 2019, 
-                    Generos = new List<string> { "Drama", "Thriller" }, 
-                    Plataforma = "Netflix", 
-                    CalificacionPromedio = 4.2, 
+                new Serie {
+                    Id = 1,
+                    Titulo = "Serie 1",
+                    Descripcion = "Descripción serie 1",
+                    Año = 2019,
+                    Generos = new List<string> { "Drama", "Thriller" },
+                    Plataforma = "Netflix",
+                    CalificacionPromedio = 4.2,
                     NumeroCalificaciones = 150,
                     NumeroTemporadas = 3,
                     NumeroEpisodiosTotales = 24,
@@ -75,14 +75,14 @@ namespace GestionPeliculas.Tests
                         }
                     }
                 },
-                new Serie { 
-                    Id = 2, 
-                    Titulo = "Serie 2", 
-                    Descripcion = "Descripción serie 2", 
-                    Año = 2022, 
-                    Generos = new List<string> { "Ciencia Ficción", "Aventura" }, 
-                    Plataforma = "Disney+", 
-                    CalificacionPromedio = 4.7, 
+                new Serie {
+                    Id = 2,
+                    Titulo = "Serie 2",
+                    Descripcion = "Descripción serie 2",
+                    Año = 2022,
+                    Generos = new List<string> { "Ciencia Ficción", "Aventura" },
+                    Plataforma = "Disney+",
+                    CalificacionPromedio = 4.7,
                     NumeroCalificaciones = 200,
                     NumeroTemporadas = 2,
                     NumeroEpisodiosTotales = 16,
@@ -347,7 +347,6 @@ namespace GestionPeliculas.Tests
             // Assert
             Assert.IsNotNull(resultado);
             Assert.AreEqual(2, resultado.Count); // Película 1 y Serie 1 están en Netflix
-            Assert.IsTrue(resultado.Any(  resultado.Count); // Película 1 y Serie 1 están en Netflix
             Assert.IsTrue(resultado.Any(c => c is Pelicula && c.Titulo == "Película 1"));
             Assert.IsTrue(resultado.Any(c => c is Serie && c.Titulo == "Serie 1"));
         }
