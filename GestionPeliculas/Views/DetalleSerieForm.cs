@@ -89,7 +89,7 @@ namespace GestionPeliculas.Views
 
             // Episodios
             Label lblEpisodios = new Label();
-            lblEpisodios.Text = $"Episodios: {_serie.NumeroEpisodio}";
+            lblEpisodios.Text = $"Episodios: {_serie.NumeroEpisodiosTotales}";
             lblEpisodios.Font = new Font("Segoe UI", 10);
             lblEpisodios.AutoSize = true;
             lblEpisodios.Location = new Point(0, 130);
@@ -164,7 +164,7 @@ namespace GestionPeliculas.Views
                 panelTemporadas.Controls.Add(lblTemporada);
 
                 // Simulación de episodios por temporada (5 episodios por temporada)
-                int episodiosPorTemporada = _serie.NumeroEpisodio / _serie.NumeroTemporadas;
+                int episodiosPorTemporada = _serie.NumeroEpisodiosTotales / Math.Max(1, _serie.NumeroTemporadas);
                 for (int j = 1; j <= episodiosPorTemporada; j++)
                 {
                     Button btnEpisodio = new Button();
