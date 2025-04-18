@@ -6,6 +6,7 @@ using GestionPeliculas.Services;
 
 namespace GestionPeliculas.Controllers
 {
+    // Asegurarse de que los métodos necesarios sean virtuales
     public class HistorialController
     {
         private readonly JsonDataService _dataService;
@@ -18,24 +19,24 @@ namespace GestionPeliculas.Controllers
         }
 
         // Constructor para testing con inyección de dependencias
-        public HistorialController(JsonDataService dataService, UsuarioController usuarioController = null)
+        public HistorialController(JsonDataService dataService, UsuarioController usuarioController)
         {
             _dataService = dataService;
-            _usuarioController = usuarioController ?? new UsuarioController(dataService);
+            _usuarioController = usuarioController;
         }
 
-        public List<HistorialVisualizacion> ObtenerTodoHistorial()
+        public virtual List<HistorialVisualizacion> ObtenerTodoHistorial()
         {
             return _dataService.CargarDatos<List<HistorialVisualizacion>>("HistorialVisualizacion.json") ?? new List<HistorialVisualizacion>();
         }
 
-        public List<HistorialVisualizacion> ObtenerHistorialUsuario(int usuarioId)
+        public virtual List<HistorialVisualizacion> ObtenerHistorialUsuario(int usuarioId)
         {
             var historial = ObtenerTodoHistorial();
             return historial.Where(h => h.UsuarioId == usuarioId).ToList();
         }
 
-        public HistorialVisualizacion ObtenerEntradaHistorial(int usuarioId, int contenidoId, int? episodioId = null)
+        public virtual HistorialVisualizacion ObtenerEntradaHistorial(int usuarioId, int contenidoId, int? episodioId = null)
         {
             var historial = ObtenerTodoHistorial();
             return historial.FirstOrDefault(h =>
@@ -44,7 +45,7 @@ namespace GestionPeliculas.Controllers
                 (episodioId == null || h.EpisodioId == episodioId));
         }
 
-        public bool RegistrarVisualizacion(HistorialVisualizacion entrada)
+        public virtual bool RegistrarVisualizacion(HistorialVisualizacion entrada)
         {
             var historial = ObtenerTodoHistorial();
 
@@ -85,7 +86,7 @@ namespace GestionPeliculas.Controllers
             return _dataService.GuardarDatos("HistorialVisualizacion.json", historial);
         }
 
-        public bool EliminarEntradaHistorial(int id)
+        public virtual bool EliminarEntradaHistorial(int id)
         {
             var historial = ObtenerTodoHistorial();
             var entrada = historial.FirstOrDefault(h => h.Id == id);
@@ -99,13 +100,13 @@ namespace GestionPeliculas.Controllers
             return _dataService.GuardarDatos("HistorialVisualizacion.json", historial);
         }
 
-        public int ObtenerTiempoTotalVisualizacion(int usuarioId)
+        public virtual int ObtenerTiempoTotalVisualizacion(int usuarioId)
         {
             var historial = ObtenerHistorialUsuario(usuarioId);
             return historial.Sum(h => h.ProgresoMinutos);
         }
 
-        public Dictionary<string, int> ObtenerEstadisticasGenero(int usuarioId)
+        public virtual Dictionary<string, int> ObtenerEstadisticasGenero(int usuarioId)
         {
             var historial = ObtenerHistorialUsuario(usuarioId);
             var estadisticas = new Dictionary<string, int>();
@@ -149,7 +150,7 @@ namespace GestionPeliculas.Controllers
         }
 
         // Método para obtener historial entre fechas
-        public List<HistorialVisualizacion> ObtenerHistorialEntreFechas(DateTime fechaInicio, DateTime fechaFin)
+        public virtual List<HistorialVisualizacion> ObtenerHistorialEntreFechas(DateTime fechaInicio, DateTime fechaFin)
         {
             var historial = ObtenerTodoHistorial();
             return historial.Where(h => h.FechaVisualizacion >= fechaInicio && h.FechaVisualizacion <= fechaFin).ToList();
