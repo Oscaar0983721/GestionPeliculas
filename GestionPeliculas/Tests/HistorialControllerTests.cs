@@ -22,33 +22,33 @@ namespace GestionPeliculas.Tests
             // Configurar datos de prueba
             _historialTest = new List<HistorialVisualizacion>
             {
-                new HistorialVisualizacion { 
-                    Id = 1, 
-                    UsuarioId = 1, 
-                    ContenidoId = 1, 
-                    TipoContenido = "Pelicula", 
-                    FechaVisualizacion = DateTime.Now.AddDays(-5), 
-                    Completado = true, 
-                    ProgresoMinutos = 120 
+                new HistorialVisualizacion {
+                    Id = 1,
+                    UsuarioId = 1,
+                    ContenidoId = 1,
+                    TipoContenido = "Pelicula",
+                    FechaVisualizacion = DateTime.Now.AddDays(-5),
+                    Completado = true,
+                    ProgresoMinutos = 120
                 },
-                new HistorialVisualizacion { 
-                    Id = 2, 
-                    UsuarioId = 1, 
-                    ContenidoId = 2, 
-                    TipoContenido = "Serie", 
-                    EpisodioId = 1, 
-                    FechaVisualizacion = DateTime.Now.AddDays(-2), 
-                    Completado = true, 
-                    ProgresoMinutos = 45 
+                new HistorialVisualizacion {
+                    Id = 2,
+                    UsuarioId = 1,
+                    ContenidoId = 2,
+                    TipoContenido = "Serie",
+                    EpisodioId = 1,
+                    FechaVisualizacion = DateTime.Now.AddDays(-2),
+                    Completado = true,
+                    ProgresoMinutos = 45
                 },
-                new HistorialVisualizacion { 
-                    Id = 3, 
-                    UsuarioId = 2, 
-                    ContenidoId = 1, 
-                    TipoContenido = "Pelicula", 
-                    FechaVisualizacion = DateTime.Now.AddDays(-1), 
-                    Completado = false, 
-                    ProgresoMinutos = 60 
+                new HistorialVisualizacion {
+                    Id = 3,
+                    UsuarioId = 2,
+                    ContenidoId = 1,
+                    TipoContenido = "Pelicula",
+                    FechaVisualizacion = DateTime.Now.AddDays(-1),
+                    Completado = false,
+                    ProgresoMinutos = 60
                 }
             };
 
@@ -59,7 +59,7 @@ namespace GestionPeliculas.Tests
 
             // Crear controlador con mock
             _controller = new HistorialController();
-            
+
             // Inyectar dependencia mock (esto requiere modificar el constructor de HistorialController)
             var field = typeof(HistorialController).GetField("_dataService", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             field.SetValue(_controller, _mockDataService.Object);
@@ -194,6 +194,22 @@ namespace GestionPeliculas.Tests
 
             // Assert
             Assert.AreEqual(165, resultado); // 120 + 45 = 165 minutos
+        }
+
+        [TestMethod]
+        public void ObtenerHistorialEntreFechas_DebeRetornarHistorialEntreFechas()
+        {
+            // Arrange
+            var fechaInicio = DateTime.Now.AddDays(-3);
+            var fechaFin = DateTime.Now;
+
+            // Act
+            var resultado = _controller.ObtenerHistorialEntreFechas(fechaInicio, fechaFin);
+
+            // Assert
+            Assert.IsNotNull(resultado);
+            Assert.AreEqual(2, resultado.Count);
+            Assert.IsTrue(resultado.All(h => h.FechaVisualizacion >= fechaInicio && h.FechaVisualizacion <= fechaFin));
         }
     }
 }
