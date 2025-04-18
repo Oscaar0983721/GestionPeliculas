@@ -55,6 +55,7 @@ namespace GestionPeliculas.Tests
             _mockDataService = new Mock<JsonDataService>();
             _mockDataService.Setup(m => m.CargarDatos<List<Comentario>>("Comentarios.json")).Returns(_comentariosTest);
             _mockDataService.Setup(m => m.GuardarDatos(It.IsAny<string>(), It.IsAny<List<Comentario>>())).Returns(true);
+            _mockDataService.Setup(m => m.GuardarDatos(It.IsAny<string>(), It.IsAny<object>())).Returns(true);
 
             // Crear controlador con mock
             _controller = new ComentarioController(_mockDataService.Object);
