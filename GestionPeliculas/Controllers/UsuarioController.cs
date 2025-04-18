@@ -8,6 +8,7 @@ using GestionPeliculas.Services;
 
 namespace GestionPeliculas.Controllers
 {
+    // Asegurarse de que los métodos necesarios sean virtuales
     public class UsuarioController
     {
         private readonly JsonDataService _dataService;
@@ -23,24 +24,24 @@ namespace GestionPeliculas.Controllers
             _dataService = dataService;
         }
 
-        public List<Usuario> ObtenerTodosUsuarios()
+        public virtual List<Usuario> ObtenerTodosUsuarios()
         {
             return _dataService.CargarDatos<List<Usuario>>("Usuarios.json") ?? new List<Usuario>();
         }
 
-        public Usuario ObtenerUsuarioPorId(int id)
+        public virtual Usuario ObtenerUsuarioPorId(int id)
         {
             var usuarios = ObtenerTodosUsuarios();
             return usuarios.FirstOrDefault(u => u.Id == id);
         }
 
-        public Usuario ObtenerUsuarioPorNombre(string nombreUsuario)
+        public virtual Usuario ObtenerUsuarioPorNombre(string nombreUsuario)
         {
             var usuarios = ObtenerTodosUsuarios();
             return usuarios.FirstOrDefault(u => u.NombreUsuario.Equals(nombreUsuario, StringComparison.OrdinalIgnoreCase));
         }
 
-        public bool RegistrarUsuario(Usuario usuario)
+        public virtual bool RegistrarUsuario(Usuario usuario)
         {
             var usuarios = ObtenerTodosUsuarios();
 
@@ -73,7 +74,7 @@ namespace GestionPeliculas.Controllers
             return _dataService.GuardarDatos("Usuarios.json", usuarios);
         }
 
-        public bool ActualizarUsuario(Usuario usuario)
+        public virtual bool ActualizarUsuario(Usuario usuario)
         {
             var usuarios = ObtenerTodosUsuarios();
             var index = usuarios.FindIndex(u => u.Id == usuario.Id);
@@ -87,7 +88,7 @@ namespace GestionPeliculas.Controllers
             return _dataService.GuardarDatos("Usuarios.json", usuarios);
         }
 
-        public bool EliminarUsuario(int id)
+        public virtual bool EliminarUsuario(int id)
         {
             var usuarios = ObtenerTodosUsuarios();
             var usuario = usuarios.FirstOrDefault(u => u.Id == id);
@@ -101,7 +102,7 @@ namespace GestionPeliculas.Controllers
             return _dataService.GuardarDatos("Usuarios.json", usuarios);
         }
 
-        public bool AutenticarUsuario(string nombreUsuario, string contraseña)
+        public virtual bool AutenticarUsuario(string nombreUsuario, string contraseña)
         {
             var usuario = ObtenerUsuarioPorNombre(nombreUsuario);
 
@@ -113,7 +114,7 @@ namespace GestionPeliculas.Controllers
             return VerificarContraseña(contraseña, usuario.Contraseña);
         }
 
-        public void AgregarContenidoVisto(int usuarioId, int contenidoId)
+        public virtual void AgregarContenidoVisto(int usuarioId, int contenidoId)
         {
             var usuario = ObtenerUsuarioPorId(usuarioId);
 
@@ -124,7 +125,7 @@ namespace GestionPeliculas.Controllers
             }
         }
 
-        public void CalificarContenido(int usuarioId, int contenidoId, int calificacion)
+        public virtual void CalificarContenido(int usuarioId, int contenidoId, int calificacion)
         {
             var usuario = ObtenerUsuarioPorId(usuarioId);
 
@@ -165,7 +166,7 @@ namespace GestionPeliculas.Controllers
             return hashContraseñaIngresada.Equals(contraseñaAlmacenada);
         }
 
-        public void InicializarDatosUsuario()
+        public virtual void InicializarDatosUsuario()
         {
             var usuarios = ObtenerTodosUsuarios();
 
@@ -182,8 +183,8 @@ namespace GestionPeliculas.Controllers
 
                 RegistrarUsuario(admin);
 
-                // Crear 100 usuarios de prueba
-                for (int i = 1; i <= 100; i++)
+                // Crear usuarios de prueba
+                for (int i = 1; i <= 5; i++)
                 {
                     var usuario = new Usuario
                     {
