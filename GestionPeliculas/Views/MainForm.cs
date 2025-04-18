@@ -22,7 +22,7 @@ namespace GestionPeliculas.Views
             _historialController = new HistorialController();
             _recomendacionController = new RecomendacionController();
             _reporteController = new ReporteController();
-            
+
             InitializeComponent();
         }
 
@@ -45,76 +45,81 @@ namespace GestionPeliculas.Views
 
             // Menú Contenido
             ToolStripMenuItem menuContenido = new ToolStripMenuItem("Contenido");
-            
+
             ToolStripMenuItem menuPeliculas = new ToolStripMenuItem("Películas");
             menuPeliculas.Click += (sender, e) => MostrarPeliculas();
             menuContenido.DropDownItems.Add(menuPeliculas);
-            
+
             ToolStripMenuItem menuSeries = new ToolStripMenuItem("Series");
             menuSeries.Click += (sender, e) => MostrarSeries();
             menuContenido.DropDownItems.Add(menuSeries);
-            
+
             ToolStripMenuItem menuBuscar = new ToolStripMenuItem("Buscar");
             menuBuscar.Click += (sender, e) => MostrarBusqueda();
             menuContenido.DropDownItems.Add(menuBuscar);
-            
+
             menuPrincipal.Items.Add(menuContenido);
 
             // Menú Mi Perfil
             ToolStripMenuItem menuPerfil = new ToolStripMenuItem("Mi Perfil");
-            
+
             ToolStripMenuItem menuHistorial = new ToolStripMenuItem("Historial");
             menuHistorial.Click += (sender, e) => MostrarHistorial();
             menuPerfil.DropDownItems.Add(menuHistorial);
-            
+
             ToolStripMenuItem menuRecomendaciones = new ToolStripMenuItem("Recomendaciones");
             menuRecomendaciones.Click += (sender, e) => MostrarRecomendaciones();
             menuPerfil.DropDownItems.Add(menuRecomendaciones);
-            
+
             ToolStripMenuItem menuCambiarContraseña = new ToolStripMenuItem("Cambiar Contraseña");
             menuCambiarContraseña.Click += (sender, e) => MostrarCambiarContraseña();
             menuPerfil.DropDownItems.Add(menuCambiarContraseña);
-            
+
             menuPrincipal.Items.Add(menuPerfil);
 
             // Menú Reportes (solo para administradores)
             if (_usuarioActual.Rol == "Administrador")
             {
                 ToolStripMenuItem menuReportes = new ToolStripMenuItem("Reportes");
-                
+
                 ToolStripMenuItem menuContenidoPopular = new ToolStripMenuItem("Contenido Popular");
                 menuContenidoPopular.Click += (sender, e) => MostrarReporteContenidoPopular();
                 menuReportes.DropDownItems.Add(menuContenidoPopular);
-                
+
                 ToolStripMenuItem menuUsuariosActivos = new ToolStripMenuItem("Usuarios Activos");
                 menuUsuariosActivos.Click += (sender, e) => MostrarReporteUsuariosActivos();
                 menuReportes.DropDownItems.Add(menuUsuariosActivos);
-                
+
                 ToolStripMenuItem menuTiempoVisualizacion = new ToolStripMenuItem("Tiempo de Visualización");
                 menuTiempoVisualizacion.Click += (sender, e) => MostrarReporteTiempoVisualizacion();
                 menuReportes.DropDownItems.Add(menuTiempoVisualizacion);
-                
+
                 ToolStripMenuItem menuDistribucionGeneros = new ToolStripMenuItem("Distribución de Géneros");
                 menuDistribucionGeneros.Click += (sender, e) => MostrarReporteDistribucionGeneros();
                 menuReportes.DropDownItems.Add(menuDistribucionGeneros);
-                
+
                 ToolStripMenuItem menuDistribucionPlataformas = new ToolStripMenuItem("Distribución de Plataformas");
                 menuDistribucionPlataformas.Click += (sender, e) => MostrarReporteDistribucionPlataformas();
                 menuReportes.DropDownItems.Add(menuDistribucionPlataformas);
-                
+
+                // Nuevo: Reportes PDF
+                ToolStripMenuItem menuReportesPdf = new ToolStripMenuItem("Generar Reportes PDF");
+                menuReportesPdf.Click += (sender, e) => MostrarReportesPdf();
+                menuReportes.DropDownItems.Add(menuReportesPdf);
+
                 menuPrincipal.Items.Add(menuReportes);
-                
+
                 // Menú Administración
                 ToolStripMenuItem menuAdmin = new ToolStripMenuItem("Administración");
-                
+
                 ToolStripMenuItem menuGestionUsuarios = new ToolStripMenuItem("Gestión de Usuarios");
                 menuGestionUsuarios.Click += (sender, e) => MostrarGestionUsuarios();
                 menuAdmin.DropDownItems.Add(menuGestionUsuarios);
-                
+
                 ToolStripMenuItem menuGestionContenido = new ToolStripMenuItem("Gestión de Contenido");
                 menuGestionContenido.Click += (sender, e) => MostrarGestionContenido();
                 menuAdmin.DropDownItems.Add(menuGestionContenido);
-                
+
                 menuPrincipal.Items.Add(menuAdmin);
             }
 
@@ -162,105 +167,118 @@ namespace GestionPeliculas.Views
 
         private void CargarRecomendaciones(Panel panel)
         {
-            // Obtener recomendaciones para el usuario
-            var recomendaciones = _recomendacionController.GenerarRecomendaciones(_usuarioActual.Id);
-            
-            if (recomendaciones.Count == 0)
+            try
             {
-                Label lblNoRecomendaciones = new Label();
-                lblNoRecomendaciones.Text = "No hay recomendaciones disponibles en este momento.";
-                lblNoRecomendaciones.AutoSize = true;
-                lblNoRecomendaciones.Location = new Point(10, 50);
-                panel.Controls.Add(lblNoRecomendaciones);
-                return;
-            }
+                // Obtener recomendaciones para el usuario
+                var recomendaciones = _recomendacionController.GenerarRecomendaciones(_usuarioActual.Id);
 
-            // Crear panel de desplazamiento
-            FlowLayoutPanel flowPanel = new FlowLayoutPanel();
-            flowPanel.FlowDirection = FlowDirection.LeftToRight;
-            flowPanel.WrapContents = true;
-            flowPanel.AutoScroll = true;
-            flowPanel.Location = new Point(10, 50);
-            flowPanel.Size = new Size(940, 380);
-            panel.Controls.Add(flowPanel);
-
-            // Mostrar recomendaciones
-            foreach (var contenido in recomendaciones)
-            {
-                Panel panelContenido = new Panel();
-                panelContenido.BorderStyle = BorderStyle.FixedSingle;
-                panelContenido.Size = new Size(180, 250);
-                panelContenido.Margin = new Padding(5);
-
-                // Título
-                Label lblTitulo = new Label();
-                lblTitulo.Text = contenido.Titulo;
-                lblTitulo.Font = new Font("Segoe UI", 9, FontStyle.Bold);
-                lblTitulo.AutoSize = false;
-                lblTitulo.TextAlign = ContentAlignment.MiddleCenter;
-                lblTitulo.Size = new Size(180, 40);
-                lblTitulo.Location = new Point(0, 160);
-                panelContenido.Controls.Add(lblTitulo);
-
-                // Año
-                Label lblAño = new Label();
-                lblAño.Text = $"Año: {contenido.Año}";
-                lblAño.AutoSize = false;
-                lblAño.Size = new Size(180, 20);
-                lblAño.TextAlign = ContentAlignment.MiddleCenter;
-                lblAño.Location = new Point(0, 200);
-                panelContenido.Controls.Add(lblAño);
-
-                // Calificación
-                Label lblCalificacion = new Label();
-                lblCalificacion.Text = $"★ {contenido.CalificacionPromedio:F1}";
-                lblCalificacion.AutoSize = false;
-                lblCalificacion.Size = new Size(180, 20);
-                lblCalificacion.TextAlign = ContentAlignment.MiddleCenter;
-                lblCalificacion.Location = new Point(0, 220);
-                panelContenido.Controls.Add(lblCalificacion);
-
-                // Imagen (simulada con un panel de color)
-                Panel panelImagen = new Panel();
-                panelImagen.BackColor = Color.LightGray;
-                panelImagen.Size = new Size(160, 150);
-                panelImagen.Location = new Point(10, 10);
-                panelContenido.Controls.Add(panelImagen);
-
-                // Tipo de contenido
-                Label lblTipo = new Label();
-                lblTipo.AutoSize = false;
-                lblTipo.Size = new Size(160, 20);
-                lblTipo.TextAlign = ContentAlignment.MiddleCenter;
-                lblTipo.Location = new Point(10, 130);
-                
-                if (contenido is Pelicula)
+                if (recomendaciones == null || recomendaciones.Count == 0)
                 {
-                    lblTipo.Text = "Película";
-                    lblTipo.BackColor = Color.LightBlue;
+                    Label lblNoRecomendaciones = new Label();
+                    lblNoRecomendaciones.Text = "No hay recomendaciones disponibles en este momento.";
+                    lblNoRecomendaciones.AutoSize = true;
+                    lblNoRecomendaciones.Location = new Point(10, 50);
+                    panel.Controls.Add(lblNoRecomendaciones);
+                    return;
                 }
-                else
-                {
-                    lblTipo.Text = "Serie";
-                    lblTipo.BackColor = Color.LightGreen;
-                }
-                
-                panelContenido.Controls.Add(lblTipo);
 
-                // Evento de clic para ver detalles
-                panelContenido.Click += (sender, e) =>
+                // Crear panel de desplazamiento
+                FlowLayoutPanel flowPanel = new FlowLayoutPanel();
+                flowPanel.FlowDirection = FlowDirection.LeftToRight;
+                flowPanel.WrapContents = true;
+                flowPanel.AutoScroll = true;
+                flowPanel.Location = new Point(10, 50);
+                flowPanel.Size = new Size(940, 380);
+                panel.Controls.Add(flowPanel);
+
+                // Mostrar recomendaciones
+                foreach (var contenido in recomendaciones)
                 {
+                    Panel panelContenido = new Panel();
+                    panelContenido.BorderStyle = BorderStyle.FixedSingle;
+                    panelContenido.Size = new Size(180, 250);
+                    panelContenido.Margin = new Padding(5);
+
+                    // Título
+                    Label lblTitulo = new Label();
+                    lblTitulo.Text = contenido.Titulo;
+                    lblTitulo.Font = new Font("Segoe UI", 9, FontStyle.Bold);
+                    lblTitulo.AutoSize = false;
+                    lblTitulo.TextAlign = ContentAlignment.MiddleCenter;
+                    lblTitulo.Size = new Size(180, 40);
+                    lblTitulo.Location = new Point(0, 160);
+                    panelContenido.Controls.Add(lblTitulo);
+
+                    // Año
+                    Label lblAño = new Label();
+                    lblAño.Text = $"Año: {contenido.Año}";
+                    lblAño.AutoSize = false;
+                    lblAño.Size = new Size(180, 20);
+                    lblAño.TextAlign = ContentAlignment.MiddleCenter;
+                    lblAño.Location = new Point(0, 200);
+                    panelContenido.Controls.Add(lblAño);
+
+                    // Calificación
+                    Label lblCalificacion = new Label();
+                    lblCalificacion.Text = $"★ {contenido.CalificacionPromedio:F1}";
+                    lblCalificacion.AutoSize = false;
+                    lblCalificacion.Size = new Size(180, 20);
+                    lblCalificacion.TextAlign = ContentAlignment.MiddleCenter;
+                    lblCalificacion.Location = new Point(0, 220);
+                    panelContenido.Controls.Add(lblCalificacion);
+
+                    // Imagen (simulada con un panel de color)
+                    Panel panelImagen = new Panel();
+                    panelImagen.BackColor = Color.LightGray;
+                    panelImagen.Size = new Size(160, 150);
+                    panelImagen.Location = new Point(10, 10);
+                    panelContenido.Controls.Add(panelImagen);
+
+                    // Tipo de contenido
+                    Label lblTipo = new Label();
+                    lblTipo.AutoSize = false;
+                    lblTipo.Size = new Size(160, 20);
+                    lblTipo.TextAlign = ContentAlignment.MiddleCenter;
+                    lblTipo.Location = new Point(10, 130);
+
                     if (contenido is Pelicula)
                     {
-                        MostrarDetallePelicula((Pelicula)contenido);
+                        lblTipo.Text = "Película";
+                        lblTipo.BackColor = Color.LightBlue;
                     }
-                    else if (contenido is Serie)
+                    else
                     {
-                        MostrarDetalleSerie((Serie)contenido);
+                        lblTipo.Text = "Serie";
+                        lblTipo.BackColor = Color.LightGreen;
                     }
-                };
 
-                flowPanel.Controls.Add(panelContenido);
+                    panelContenido.Controls.Add(lblTipo);
+
+                    // Evento de clic para ver detalles
+                    panelContenido.Click += (sender, e) =>
+                    {
+                        if (contenido is Pelicula)
+                        {
+                            MostrarDetallePelicula((Pelicula)contenido);
+                        }
+                        else if (contenido is Serie)
+                        {
+                            MostrarDetalleSerie((Serie)contenido);
+                        }
+                    };
+
+                    flowPanel.Controls.Add(panelContenido);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar recomendaciones: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                Label lblError = new Label();
+                lblError.Text = "No se pudieron cargar las recomendaciones.";
+                lblError.AutoSize = true;
+                lblError.Location = new Point(10, 50);
+                panel.Controls.Add(lblError);
             }
         }
 
@@ -329,6 +347,12 @@ namespace GestionPeliculas.Views
         {
             Form reporteForm = new ReporteDistribucionPlataformasForm();
             reporteForm.ShowDialog();
+        }
+
+        private void MostrarReportesPdf()
+        {
+            Form reportesForm = new ReportesForm();
+            reportesForm.ShowDialog();
         }
 
         private void MostrarGestionUsuarios()
