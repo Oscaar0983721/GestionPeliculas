@@ -29,8 +29,9 @@ namespace GestionPeliculas.Tests
 
             // Configurar mock
             _mockDataService = new Mock<JsonDataService>();
-            _mockDataService.Setup(m => m.CargarDatos<List<Usuario>>(It.IsAny<string>())).Returns(_usuariosTest);
+            _mockDataService.Setup(m => m.CargarDatos<List<Usuario>>("Usuarios.json")).Returns(_usuariosTest);
             _mockDataService.Setup(m => m.GuardarDatos(It.IsAny<string>(), It.IsAny<List<Usuario>>())).Returns(true);
+            _mockDataService.Setup(m => m.GuardarDatos(It.IsAny<string>(), It.IsAny<object>())).Returns(true);
 
             // Inyectar mock en el controlador
             _controller = new UsuarioController(_mockDataService.Object);
@@ -202,7 +203,7 @@ namespace GestionPeliculas.Tests
         public void AutenticarUsuario_ConCredencialesCorrectas_DebeRetornarTrue()
         {
             // Arrange - La contraseña "admin123" tiene el hash "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9"
-            
+
             // Act
             var resultado = _controller.AutenticarUsuario("admin", "admin123");
 
