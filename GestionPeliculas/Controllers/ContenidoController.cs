@@ -400,6 +400,9 @@ namespace GestionPeliculas.Controllers
                 // Lista de plataformas para usar aleatoriamente
                 string[] plataformas = { "Netflix", "Amazon Prime", "Disney+", "HBO Max", "Apple TV+", "Hulu", "Paramount+" };
 
+                // Lista de creadores para usar aleatoriamente
+                string[] creadores = { "Vince Gilligan", "Shonda Rhimes", "Ryan Murphy", "David Benioff & D.B. Weiss", "Greg Berlanti", "Chuck Lorre", "Jenji Kohan", "Joss Whedon", "Damon Lindelof", "Phoebe Waller-Bridge" };
+
                 // Crear 50 series de prueba
                 Random random = new Random();
 
@@ -460,6 +463,8 @@ namespace GestionPeliculas.Controllers
                         NumeroCalificaciones = random.Next(10, 1000),
                         NumeroTemporadas = numTemporadas,
                         NumeroEpisodiosTotales = totalEpisodios,
+                        NumeroEpisodios = totalEpisodios, // Asegurar que esta propiedad se establezca
+                        Creador = creadores[random.Next(creadores.Length)], // Asignar un creador
                         Temporadas = temporadas
                     };
 
