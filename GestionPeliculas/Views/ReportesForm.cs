@@ -135,8 +135,8 @@ namespace GestionPeliculas.Views
                 try
                 {
                     string rutaReporte = "";
-                    DateTime fechaInicio = dtpFechaInicio.Value;
-                    DateTime fechaFin = dtpFechaFin.Value;
+                    DateTime fechaInicio = dtpFechaInicio.Value.Date;
+                    DateTime fechaFin = dtpFechaFin.Value.Date.AddDays(1).AddSeconds(-1); // Incluir todo el día
 
                     Cursor = Cursors.WaitCursor;
 
