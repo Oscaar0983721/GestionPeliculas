@@ -54,7 +54,7 @@ namespace GestionPeliculas.Controllers
             if (entradaExistente != null)
             {
                 // Actualizar entrada existente
-                entradaExistente.Fecha = DateTime.Now;
+                entradaExistente.FechaVisualizacion = DateTime.Now;
                 entradaExistente.Completado = entrada.Completado;
                 entradaExistente.ProgresoMinutos = entrada.ProgresoMinutos;
 
@@ -74,7 +74,7 @@ namespace GestionPeliculas.Controllers
                 }
 
                 // Asegurar que la fecha esté establecida
-                entrada.Fecha = DateTime.Now;
+                entrada.FechaVisualizacion = DateTime.Now;
 
                 historial.Add(entrada);
 
@@ -152,7 +152,7 @@ namespace GestionPeliculas.Controllers
         public List<HistorialVisualizacion> ObtenerHistorialEntreFechas(DateTime fechaInicio, DateTime fechaFin)
         {
             var historial = ObtenerTodoHistorial();
-            return historial.Where(h => h.Fecha >= fechaInicio && h.Fecha <= fechaFin).ToList();
+            return historial.Where(h => h.FechaVisualizacion >= fechaInicio && h.FechaVisualizacion <= fechaFin).ToList();
         }
     }
 }
