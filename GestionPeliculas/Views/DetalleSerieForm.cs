@@ -1,6 +1,8 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Net;
+using System.IO;
 using GestionPeliculas.Controllers;
 using GestionPeliculas.Models;
 
@@ -42,12 +44,34 @@ namespace GestionPeliculas.Views
             panelPrincipal.Dock = DockStyle.Fill;
             this.Controls.Add(panelPrincipal);
 
-            // Panel de imagen (simulada con un panel de color)
-            Panel panelImagen = new Panel();
-            panelImagen.BackColor = Color.LightGray;
-            panelImagen.Size = new Size(200, 300);
-            panelImagen.Location = new Point(20, 20);
-            panelPrincipal.Controls.Add(panelImagen);
+            // Panel de imagen desde URL
+            PictureBox pictureBox = new PictureBox();
+            pictureBox.Size = new Size(200, 300);
+            pictureBox.Location = new Point(20, 20);
+            pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox.BackColor = Color.LightGray;
+
+            try
+            {
+                if (!string.IsNullOrEmpty(_serie.ImagenUrl))
+                {
+                    using (WebClient client = new WebClient())
+                    {
+                        byte[] imageData = client.DownloadData(_serie.ImagenUrl);
+                        using (MemoryStream ms = new MemoryStream(imageData))
+                        {
+                            pictureBox.Image = Image.FromStream(ms);
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                // Si hay error al cargar la imagen, dejar el fondo gris
+                pictureBox.Image = null;
+            }
+
+            panelPrincipal.Controls.Add(pictureBox);
 
             // Panel de información
             Panel panelInfo = new Panel();
