@@ -2,6 +2,8 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using System.Net;
+using System.IO;
 using GestionPeliculas.Controllers;
 using GestionPeliculas.Models;
 
@@ -18,7 +20,7 @@ namespace GestionPeliculas.Views
             _usuarioActual = usuario;
             _contenidoController = new ContenidoController();
             _peliculas = _contenidoController.ObtenerTodasPeliculas();
-            
+
             InitializeComponent();
         }
 
@@ -110,7 +112,7 @@ namespace GestionPeliculas.Views
             {
                 string genero = cmbGenero.SelectedItem.ToString();
                 string plataforma = cmbPlataforma.SelectedItem.ToString();
-                
+
                 FiltrarPeliculas(genero, plataforma);
             };
             panelFiltros.Controls.Add(btnFiltrar);
@@ -213,12 +215,34 @@ namespace GestionPeliculas.Views
                 lblCalificacion.Location = new Point(0, 220);
                 panelPelicula.Controls.Add(lblCalificacion);
 
-                // Imagen (simulada con un panel de color)
-                Panel panelImagen = new Panel();
-                panelImagen.BackColor = Color.LightGray;
-                panelImagen.Size = new Size(160, 150);
-                panelImagen.Location = new Point(10, 10);
-                panelPelicula.Controls.Add(panelImagen);
+                // Imagen desde URL
+                PictureBox pictureBox = new PictureBox();
+                pictureBox.Size = new Size(160, 150);
+                pictureBox.Location = new Point(10, 10);
+                pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+                pictureBox.BackColor = Color.LightGray;
+
+                try
+                {
+                    if (!string.IsNullOrEmpty(pelicula.ImagenUrl))
+                    {
+                        using (WebClient client = new WebClient())
+                        {
+                            byte[] imageData = client.DownloadData(pelicula.ImagenUrl);
+                            using (MemoryStream ms = new MemoryStream(imageData))
+                            {
+                                pictureBox.Image = Image.FromStream(ms);
+                            }
+                        }
+                    }
+                }
+                catch
+                {
+                    // Si hay error al cargar la imagen, mostrar un panel de color
+                    pictureBox.Image = null;
+                }
+
+                panelPelicula.Controls.Add(pictureBox);
 
                 // Evento de clic para ver detalles
                 panelPelicula.Click += (sender, e) =>
