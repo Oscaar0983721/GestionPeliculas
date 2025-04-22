@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using GestionPeliculas.Controllers;
 using GestionPeliculas.Models;
 
@@ -319,7 +320,7 @@ namespace GestionPeliculas.Views
             // Crear formulario
             Form formPelicula = new Form();
             formPelicula.Text = esEdicion ? "Editar Película" : "Agregar Película";
-            formPelicula.Size = new Size(500, 500);
+            formPelicula.Size = new Size(500, 550);
             formPelicula.StartPosition = FormStartPosition.CenterParent;
             formPelicula.FormBorderStyle = FormBorderStyle.FixedDialog;
             formPelicula.MaximizeBox = false;
@@ -425,9 +426,55 @@ namespace GestionPeliculas.Views
             if (esEdicion) txtDirector.Text = pelicula.Director;
             formPelicula.Controls.Add(txtDirector);
 
+            // Nuevo: Campo para URL de imagen
+            Label lblImagenUrl = new Label();
+            lblImagenUrl.Text = "URL de Imagen:";
+            lblImagenUrl.Location = new Point(30, 350);
+            lblImagenUrl.AutoSize = true;
+            formPelicula.Controls.Add(lblImagenUrl);
+
+            TextBox txtImagenUrl = new TextBox();
+            txtImagenUrl.Location = new Point(150, 347);
+            txtImagenUrl.Size = new Size(300, 23);
+            if (esEdicion) txtImagenUrl.Text = pelicula.ImagenUrl;
+            formPelicula.Controls.Add(txtImagenUrl);
+
+            // Botón para probar la URL de la imagen
+            Button btnProbarUrl = new Button();
+            btnProbarUrl.Text = "Probar URL";
+            btnProbarUrl.Location = new Point(150, 380);
+            btnProbarUrl.Size = new Size(100, 25);
+            btnProbarUrl.Click += (sender, e) =>
+            {
+                string url = txtImagenUrl.Text.Trim();
+                if (string.IsNullOrEmpty(url))
+                {
+                    MessageBox.Show("Por favor, ingrese una URL de imagen.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                try
+                {
+                    using (WebClient client = new WebClient())
+                    {
+                        byte[] imageData = client.DownloadData(url);
+                        using (var ms = new System.IO.MemoryStream(imageData))
+                        {
+                            Image img = Image.FromStream(ms);
+                            MessageBox.Show("La URL de la imagen es válida.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error al cargar la imagen: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            };
+            formPelicula.Controls.Add(btnProbarUrl);
+
             Button btnGuardar = new Button();
             btnGuardar.Text = "Guardar";
-            btnGuardar.Location = new Point(150, 370);
+            btnGuardar.Location = new Point(150, 420);
             btnGuardar.Size = new Size(100, 30);
             btnGuardar.Click += (sender, args) =>
             {
@@ -448,6 +495,7 @@ namespace GestionPeliculas.Views
                 nuevaPelicula.Plataforma = cmbPlataforma.Text;
                 nuevaPelicula.Duracion = (int)numDuracion.Value;
                 nuevaPelicula.Director = txtDirector.Text;
+                nuevaPelicula.ImagenUrl = txtImagenUrl.Text.Trim();
 
                 bool resultado;
                 if (esEdicion)
@@ -480,7 +528,7 @@ namespace GestionPeliculas.Views
 
             Button btnCancelar = new Button();
             btnCancelar.Text = "Cancelar";
-            btnCancelar.Location = new Point(260, 370);
+            btnCancelar.Location = new Point(260, 420);
             btnCancelar.Size = new Size(90, 30);
             btnCancelar.Click += (sender, args) => formPelicula.Close();
             formPelicula.Controls.Add(btnCancelar);
@@ -495,7 +543,7 @@ namespace GestionPeliculas.Views
             // Crear formulario
             Form formSerie = new Form();
             formSerie.Text = esEdicion ? "Editar Serie" : "Agregar Serie";
-            formSerie.Size = new Size(600, 600);
+            formSerie.Size = new Size(600, 650);
             formSerie.StartPosition = FormStartPosition.CenterParent;
             formSerie.FormBorderStyle = FormBorderStyle.FixedDialog;
             formSerie.MaximizeBox = false;
@@ -596,9 +644,68 @@ namespace GestionPeliculas.Views
             lblTemporadasInfo.AutoSize = true;
             formSerie.Controls.Add(lblTemporadasInfo);
 
+            // Nuevo: Campo para URL de imagen
+            Label lblImagenUrl = new Label();
+            lblImagenUrl.Text = "URL de Imagen:";
+            lblImagenUrl.Location = new Point(30, 330);
+            lblImagenUrl.AutoSize = true;
+            formSerie.Controls.Add(lblImagenUrl);
+
+            TextBox txtImagenUrl = new TextBox();
+            txtImagenUrl.Location = new Point(150, 327);
+            txtImagenUrl.Size = new Size(400, 23);
+            if (esEdicion) txtImagenUrl.Text = serie.ImagenUrl;
+            formSerie.Controls.Add(txtImagenUrl);
+
+            // Botón para probar la URL de la imagen
+            Button btnProbarUrl = new Button();
+            btnProbarUrl.Text = "Probar URL";
+            btnProbarUrl.Location = new Point(150, 360);
+            btnProbarUrl.Size = new Size(100, 25);
+            btnProbarUrl.Click += (sender, e) =>
+            {
+                string url = txtImagenUrl.Text.Trim();
+                if (string.IsNullOrEmpty(url))
+                {
+                    MessageBox.Show("Por favor, ingrese una URL de imagen.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                try
+                {
+                    using (WebClient client = new WebClient())
+                    {
+                        byte[] imageData = client.DownloadData(url);
+                        using (var ms = new System.IO.MemoryStream(imageData))
+                        {
+                            Image img = Image.FromStream(ms);
+                            MessageBox.Show("La URL de la imagen es válida.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error al cargar la imagen: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            };
+            formSerie.Controls.Add(btnProbarUrl);
+
+            // Creador de la serie
+            Label lblCreador = new Label();
+            lblCreador.Text = "Creador:";
+            lblCreador.Location = new Point(30, 400);
+            lblCreador.AutoSize = true;
+            formSerie.Controls.Add(lblCreador);
+
+            TextBox txtCreador = new TextBox();
+            txtCreador.Location = new Point(150, 397);
+            txtCreador.Size = new Size(400, 23);
+            if (esEdicion) txtCreador.Text = serie.Creador;
+            formSerie.Controls.Add(txtCreador);
+
             Button btnGuardar = new Button();
             btnGuardar.Text = "Guardar";
-            btnGuardar.Location = new Point(150, 350);
+            btnGuardar.Location = new Point(150, 440);
             btnGuardar.Size = new Size(100, 30);
             btnGuardar.Click += (sender, args) =>
             {
@@ -617,6 +724,8 @@ namespace GestionPeliculas.Views
                 nuevaSerie.Año = (int)numAño.Value;
                 nuevaSerie.Generos = new List<string>(txtGeneros.Text.Split(',').Select(g => g.Trim()));
                 nuevaSerie.Plataforma = cmbPlataforma.Text;
+                nuevaSerie.ImagenUrl = txtImagenUrl.Text.Trim();
+                nuevaSerie.Creador = txtCreador.Text;
 
                 int numTemporadasAnterior = esEdicion ? serie.NumeroTemporadas : 0;
                 int numTemporadasNuevo = (int)numTemporadas.Value;
@@ -692,7 +801,7 @@ namespace GestionPeliculas.Views
 
             Button btnCancelar = new Button();
             btnCancelar.Text = "Cancelar";
-            btnCancelar.Location = new Point(260, 350);
+            btnCancelar.Location = new Point(260, 440);
             btnCancelar.Size = new Size(90, 30);
             btnCancelar.Click += (sender, args) => formSerie.Close();
             formSerie.Controls.Add(btnCancelar);
