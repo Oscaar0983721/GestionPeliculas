@@ -2,6 +2,7 @@ using System;
 
 namespace GestionPeliculas.Models
 {
+    //almacenar cuándo, cuánto y qué vio un usuario, y si lo terminó o no.
     public class HistorialVisualizacion
     {
         public int Id { get; set; }
@@ -15,7 +16,7 @@ namespace GestionPeliculas.Models
 
         public HistorialVisualizacion()
         {
-            FechaVisualizacion = DateTime.Now;
+            FechaVisualizacion = DateTime.Now; 
         }
     }
 }

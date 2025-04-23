@@ -9,14 +9,15 @@ using iTextSharp.text.pdf;
 
 namespace GestionPeliculas.Services
 {
-    public class ReportesPdfService
+    public class ReportesPdfService // Esta clase se encarga de generar reportes en formato PDF
     {
         private readonly UsuarioController _usuarioController;
         private readonly ContenidoController _contenidoController;
         private readonly HistorialController _historialController;
         private readonly ComentarioController _comentarioController;
 
-        public ReportesPdfService()
+        public ReportesPdfService() // Constructor
+
         {
             _usuarioController = new UsuarioController();
             _contenidoController = new ContenidoController();
@@ -24,8 +25,9 @@ namespace GestionPeliculas.Services
             _comentarioController = new ComentarioController();
         }
 
-        // Constructor para testing con inyección de dependencias
+       
         public ReportesPdfService(
+            // Constructor con inyección de dependencias
             UsuarioController usuarioController,
             ContenidoController contenidoController,
             HistorialController historialController,
@@ -37,7 +39,7 @@ namespace GestionPeliculas.Services
             _comentarioController = comentarioController;
         }
 
-        public string GenerarReporteUsuariosSuscritos(DateTime fechaInicio, DateTime fechaFin)
+        public string GenerarReporteUsuariosSuscritos(DateTime fechaInicio, DateTime fechaFin) // Genera un reporte de usuarios suscritos en formato PDF
         {
             try
             {
@@ -104,7 +106,7 @@ namespace GestionPeliculas.Services
             }
         }
 
-        public string GenerarReporteInteraccionUsuarios(DateTime fechaInicio, DateTime fechaFin)
+        public string GenerarReporteInteraccionUsuarios(DateTime fechaInicio, DateTime fechaFin) // Genera un reporte de interacción de usuarios en formato PDF
         {
             try
             {
@@ -213,7 +215,7 @@ namespace GestionPeliculas.Services
             }
         }
 
-        public string GenerarReporteContenidoPopular(DateTime fechaInicio, DateTime fechaFin)
+        public string GenerarReporteContenidoPopular(DateTime fechaInicio, DateTime fechaFin) // Genera un reporte de contenido popular en formato PDF
         {
             try
             {

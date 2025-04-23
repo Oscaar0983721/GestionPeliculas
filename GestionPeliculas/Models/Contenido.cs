@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace GestionPeliculas.Models
 {
-    public abstract class Contenido
+    public abstract class Contenido // Clase base para los contenidos en el sistema GestionPeliculas
     {
         public int Id { get; set; }
         public string Titulo { get; set; }
@@ -16,7 +16,9 @@ namespace GestionPeliculas.Models
         public int NumeroCalificaciones { get; set; }
         public DateTime FechaAgregado { get; set; }
 
-        public Contenido()
+        public Contenido() //constructor por defecto
+        // Inicializa la fecha de agregado al momento de crear el objeto
+        
         {
             FechaAgregado = DateTime.Now;
         }

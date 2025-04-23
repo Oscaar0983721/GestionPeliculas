@@ -4,7 +4,9 @@ using System.Collections.Generic;
 namespace GestionPeliculas.Models
 {
     public class Usuario
+        //representa a una persona que usa la aplicación para ver películas y series, calificarlas, y posiblemente administrarla si tiene ese rol.
     {
+        // Propiedades del usuario
         public int Id { get; set; }
         public string NombreUsuario { get; set; }
         public string Contraseña { get; set; }

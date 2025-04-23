@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using GestionPeliculas.Models;
 
+//Brinda estadísticas y visualizaciones sobre el comportamiento de los usuarios y el contenido disponible en la plataforma.
+
 namespace GestionPeliculas.Controllers
 {
     public class ReporteController
@@ -11,6 +13,7 @@ namespace GestionPeliculas.Controllers
         private readonly ContenidoController _contenidoController;
         private readonly UsuarioController _usuarioController;
 
+        //constructor crea instancias de cada controlador, para poder usarlos dentro de los métodos del reporte.
         public ReporteController()
         {
             _historialController = new HistorialController();
@@ -18,6 +21,7 @@ namespace GestionPeliculas.Controllers
             _usuarioController = new UsuarioController();
         }
 
+        //cuenta cuántas veces se ha visto cada contenido (película o serie).
         public Dictionary<string, int> ObtenerContenidoPopular()
         {
             var historial = _historialController.ObtenerTodoHistorial();

@@ -4,9 +4,10 @@ using System.Linq;
 using GestionPeliculas.Models;
 using GestionPeliculas.Services;
 
+//gestionar películas y series dentro de una aplicación.
 namespace GestionPeliculas.Controllers
 {
-    // Asegurarse de que los métodos necesarios sean virtuales
+   
     public class ContenidoController
     {
         private readonly JsonDataService _dataService;
@@ -16,7 +17,7 @@ namespace GestionPeliculas.Controllers
             _dataService = new JsonDataService();
         }
 
-        // Constructor para inyección de dependencias (para testing)
+        // Constructor
         public ContenidoController(JsonDataService dataService)
         {
             _dataService = dataService;

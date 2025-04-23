@@ -6,19 +6,19 @@ using System.Text;
 using GestionPeliculas.Models;
 using GestionPeliculas.Services;
 
+
 namespace GestionPeliculas.Controllers
 {
-    // Asegurarse de que los métodos necesarios sean virtuales
+    //Maneja toda la lógica relacionada con la gestión de usuarios, autenticación, calificaciones,...
     public class UsuarioController
     {
         private readonly JsonDataService _dataService;
-
+        // Constructores
         public UsuarioController()
         {
             _dataService = new JsonDataService();
         }
-
-        // Constructor para inyección de dependencias (para testing)
+                
         public UsuarioController(JsonDataService dataService)
         {
             _dataService = dataService;

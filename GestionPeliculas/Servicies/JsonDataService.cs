@@ -6,9 +6,10 @@ namespace GestionPeliculas.Services
 {
     public class JsonDataService
     {
+        // Esta clase se encarga de la carga y guardado de datos en formato JSON.
         private readonly string _dataDirectory;
 
-        public JsonDataService()
+        public JsonDataService() // constructor
         {
             // Crear directorio de datos si no existe
             _dataDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data");

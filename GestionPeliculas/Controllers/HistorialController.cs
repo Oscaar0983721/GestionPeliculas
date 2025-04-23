@@ -4,9 +4,11 @@ using System.Linq;
 using GestionPeliculas.Models;
 using GestionPeliculas.Services;
 
+//se encarga de manejar el historial de visualización de los usuarios 
+
 namespace GestionPeliculas.Controllers
 {
-    // Asegurarse de que los métodos necesarios sean virtuales
+   
     public class HistorialController
     {
         private readonly JsonDataService _dataService;
@@ -18,7 +20,7 @@ namespace GestionPeliculas.Controllers
             _usuarioController = new UsuarioController();
         }
 
-        // Constructor para testing con inyección de dependencias
+        // Constructor 
         public HistorialController(JsonDataService dataService, UsuarioController usuarioController)
         {
             _dataService = dataService;

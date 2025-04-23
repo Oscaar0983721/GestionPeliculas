@@ -4,6 +4,8 @@ using System.Linq;
 using GestionPeliculas.Models;
 using GestionPeliculas.Services;
 
+//Genera, guarda y recupera recomendaciones personalizadas de contenido (películas o series)
+//para los usuarios, basándose en su historial de visualización y preferencias de género.
 namespace GestionPeliculas.Controllers
 {
     public class RecomendacionController

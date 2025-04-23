@@ -4,6 +4,7 @@ using System.Linq;
 using GestionPeliculas.Models;
 using GestionPeliculas.Services;
 
+//proporciona toda la lógica para administrar comentarios
 namespace GestionPeliculas.Controllers
 {
     public class ComentarioController
@@ -15,7 +16,7 @@ namespace GestionPeliculas.Controllers
             _dataService = new JsonDataService();
         }
 
-        // Constructor para testing con inyección de dependencias
+        // Constructor
         public ComentarioController(JsonDataService dataService)
         {
             _dataService = dataService;

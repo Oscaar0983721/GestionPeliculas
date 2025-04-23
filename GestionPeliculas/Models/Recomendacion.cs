@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace GestionPeliculas.Models
 {
+    /// Esta clase representa una recomendación de contenido para un usuario.
     public class Recomendacion
     {
         public int Id { get; set; }
